@@ -1,40 +1,37 @@
-from Xlib import display, X
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 from window import Window
 from workspace import Workspace
-from keybindings import key_bindings
-from layout import tile_horizontally
 
+class TilingWindowManager:
+    def __init__(self):
+        self.workspaces = [Workspace([])]
 
-def main():
-    # Open a connection to the X server
-    d = display.Display()
+    def add_workspace(self):
+        self.workspaces.append(Workspace([]))
 
-    # Create a window
-    win = d.create_resource_object('window', d.create_window(
-        d.screen().root,   # Parent window
-        0, 0,               # X, Y position
-        640, 480,           # Width, height
-        0,                  # Border width
-        d.screen().root_depth,  # Color depth
-        X.InputOutput       # Window class
-    ))
+    def remove_workspace(self, workspace):
+        self.workspaces.remove(workspace)
 
-    # Map the window to the screen
-    win.map()
+    def move_window_to_workspace(self, window, workspace_index):
+        self.workspaces[workspace_index].add_window(window)
 
-    # Create a workspace for the window
-    workspace = Workspace()
-    workspace.add_window(Window(d, win))
+    def move_window_left(self, window):
+        pass
 
-    # Grab the keyboard to listen for key events
-    win.grab_keyboard(True, X.GrabModeAsync, X.GrabModeAsync, X.CurrentTime)
+    def move_window_right(self, window):
+        pass
 
-    # Run the event loop
-    while True:
-        event = d.next_event()
-        if event.type in key_bindings:
-            key_bindings[event.type](d, event)
-        elif event.type == X.ConfigureNotify:
-            # Update the layout when the window is resized
-            geometry = win.get_geometry()
-            tile_horizontally(workspace.get_windows(), geometry.x, geometry.y, geometry.width, geometry.height)
+    def resize_window_left(self, window):
+        pass
+
+    def resize_window_right(self, window):
+        pass
+
+if __name__ == "__main__":
+    twm = TilingWindowManager()
+    win = Gtk.Window()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
