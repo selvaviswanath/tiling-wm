@@ -6,10 +6,10 @@ from workspace import Workspace
 
 class TilingWindowManager:
     def __init__(self):
-        self.workspaces = [Workspace([])]
+        self.workspaces = [Workspace()]
 
     def add_workspace(self):
-        self.workspaces.append(Workspace([]))
+        self.workspaces.append(Workspace())
 
     def remove_workspace(self, workspace):
         self.workspaces.remove(workspace)
@@ -31,6 +31,7 @@ class TilingWindowManager:
 
 if __name__ == "__main__":
     twm = TilingWindowManager()
+    Gtk.init()
     win = Gtk.Window()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
